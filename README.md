@@ -3,7 +3,7 @@
 [Jupyter-Book](https://jupyterbook.org) __Check it out -->__ [![Jupyter Book
 Badge](images/badge.svg)](https://cooperrc.github.io/computational-mechanics/README.html)
 
-##Zyaja Huggan Account From Comp Mech
+## Zyaja Huggan Account From Comp Mech
 
 
 Greetings!
