@@ -15,15 +15,8 @@ kernelspec:
 > __Content modified under Creative Commons Attribution license CC-BY
 > 4.0, code under BSD 3-Clause License © 2020 R.C. Cooper__
 
-+++
-
-# Homework 1 By Zyaja Huggan
-
 ```{code-cell} ipython3
-#These are all the import statements that I needed to complete this homework
-import math #math functions
-import numpy as np #math functions
-import matplotlib.pyplot as plt #plotting data
+import math
 ```
 
 # Homework
@@ -37,10 +30,6 @@ import matplotlib.pyplot as plt #plotting data
     b. What is the average density of the box?
     
     c. What is the result of the following logical operation, `volume>1000` (in inches^3)
-
-+++
-
-The volume of a box is calculated by doing the length x width x height of the box. The density is calculated by doing mass divided by volume. 
 
 ```{code-cell} ipython3
 #a). Volume of a Rectangular Box 12.5" x 11" x 14"
@@ -80,11 +69,11 @@ The logical operation will return True since 1925lbs is more than 1000lbs.
 str1 = 'Python'
 str2 = 'python'
 #a). 
-print(str1 < str2) #check if string one is less than string two
+print(str1 < str2)
 #b).
-print(str1 == str2) #check if the strings are equal
+print(str1 == str2)
 #c). 
-print(str1 > str2) #check is string one is more than string two
+print(str1 > str2)
 #d). 
 str1 = str1.lower()
 print(str1 == str2)
@@ -111,7 +100,7 @@ else:
 ```{code-cell} ipython3
 #y is 20 and x is less than y
 
-x = 1 #needs to be an integer
+x = 1
 y = 20
 
 if x < y and y == 20:
@@ -164,9 +153,9 @@ The error in this code occurs because the x variable is a string and not an inte
 ```{code-cell} ipython3
 def fizz_buzz(number): #defined a functions
     '''Determines if a number is divisble by 3, 2, and/or 5 and returns the correct statement'''
-    if (number % 3 == 0 ) and (number % 2 == 0) and (number % 5 == 0): #if statements to determine what numbers the input is divisble by 
+    if (number % 3 == 0 ) and (number % 2 == 0) and (number % 5 == 0):
         return "Computational Mechanics Rocks!"
-    elif (number % 3 == 0) and (number % 2== 0): #elif statements to code for every possibility 
+    elif (number % 3 == 0) and (number % 2== 0):
         return "Computatial Mechanics"
     elif (number % 3 == 0) and (number % 5 == 0):
         return "Computational Rocks!"
@@ -182,7 +171,7 @@ def fizz_buzz(number): #defined a functions
         return number
 
 for i in range(20):
-    print(fizz_buzz(i)) #print out the results of the first 19
+    print(fizz_buzz(i))
     
 ```
 
@@ -195,20 +184,20 @@ for i in range(20):
     b. Use your function to plot sin(x) and cos(x) for x=$0..2\pi$
 
 ```{code-cell} ipython3
-
+import numpy as np 
+import matplotlib.pyplot as plt
 def sincos(x):
     '''Returns the sine and cosine arrays of an inputted number.
-    1a). Documents the function and b). plots the function from 0 to 2pi
+    a). Documents the function and b). plots the function from 0 to 2pi
     '''
-    sinx = np.sin(x) #create an array using sine function
-    cosx = np.cos(x) #create an array using cosine function
-    plt.plot(x, sinx, color='red', label='sin(x)') #plotting th sin function
-    plt.plot(x, cosx, color='black', label='cos(X)') #plotting the cosine function
-    plt.legend() #puts a legend on the graph
-    return(sinx, cosx) #returns the plots of the graphs
+    sinx = np.sin(x)
+    cosx = np.cos(x)
+    plt.plot(x, sinx, color='red', label='sin(x)')
+    plt.plot(x, cosx, color='black', label='cos(X)')
+    plt.legend()
+    return(sinx, cosx)
 
-x = np.linspace(0, 2*np.pi) #plots from 0 to 2pi
-#1b) Document using help file
+x =np.linspace(0, 2*np.pi)
 help(sincos)
 sincos(x)
 ```
@@ -223,32 +212,27 @@ of the two indices from 0 to 9 e.g. A_99[3,2]=6 and A_99[4,4]=16.
     c. Calculate the standard deviation of `A_99`
 
 ```{code-cell} ipython3
-#2a) Time Script Using Time
 %time
-A_99=[] #Assigned A_99 to an empty list so numbers can be added into it 
-for i in range(10): 
-    for j in range(10): #makes an array of numbers 0-9
-        A_99.append(i*j) #multiple the numbers in the arrays to create A_99
+A_99=[]
+for i in range(10):
+    for j in range(10):
+        A_99.append(i*j)
 
-#2b) mean calculation
+#mean calculation
 summation = np.sum(A_99)
-length = len(A_99) #length of the list
-mean = summation/length #mean is the sum of all the values divided 
+length = len(A_99)
+mean = summation/length
 print(mean)
 
-#2c) standard deviation calculation
-square = [] #collection of all the values minus the mean squared
+#standard deviation calculation
+square = []
 for i in A_99:
-    combine = (i - mean)**2 #values minus the mean squared 
+    combine = (i - mean)**2
     square.append(combine)
-total = np.sum(square)/length #sums all the squares
-standard_deviation = math.sqrt(total) #calculation of standard deivation 
+total = np.sum(square)/length
+standard_deviation = math.sqrt(total)
 print(standard_deviation)
 ```
-
-The mean of the data is 20.25 and the standard deviation is 20.05. 
-
-+++
 
 3. Use the two arrays, X and Y, given below to create A_99 using numpy array math rather than a for-loop.
 
@@ -267,33 +251,30 @@ X, Y = np.meshgrid(np.arange(10), np.arange(10))
 ```{code-cell} ipython3
 #a) Time script
 %time
-X, Y = np.meshgrid(np.arange(10), np.arange(10)) #Using the linked documentation 
+X, Y = np.meshgrid(np.arange(10), np.arange(10))
 A_99 = X * Y
 
-A_99_reshape = np.reshape(A_99, 100) #array of evenly spaced values 
+A_99_reshape = np.reshape(A_99, 100)
 
 #b) Mean calculation
-summation = np.sum(A_99_reshape) #sum of array
-length = len(A_99_reshape) #length of array
-mean = summation/length #mean
+summation = np.sum(A_99_reshape)
+length = len(A_99_reshape)
+mean = summation/length
 print(mean)
 
 #c) Standard deviation calculation
-square = [] #all of the values minus the mean squared
+square = []
 for i in A_99:
-    combine = (i - mean)**2 #values minus the mean squared
+    combine = (i - mean)**2
     square.append(combine)
-total = np.sum(square)/length #sums all the squares
-standard_deviation = math.sqrt(total) #calculation of standard deivation 
+total = np.sum(square)/length
+standard_deviation = math.sqrt(total)
 print(standard_deviation)
 
 #d) Filled Contour Plot
-plt.contourf(X, Y, A_99) #from provided documentation
+Z =(X**2+Y**2)**0.5
+plt.contourf(X,Y,Z)
 ```
-
-The mean of the data is 20.25 and the standard deviation is 20.05. The filled contour plot is shown above.
-
-+++
 
 4. The following linear interpolation function has an error. It is supposed to return y(x) given the the two points $p_1=[x_1,~y_1]$ and $p_2=[x_2,~y_2]$. Currently, it just returns and error.
 
@@ -317,9 +298,10 @@ def linInterp(x,p1,p2):
     p1=np.array([x1,y1])
     and
     p2=np.array([x2,y2])'''
-    slope = (p2[1]-p1[1])/(p2[0]-p1[0]) #indices need to be in range. The indiced of a two-item list are 0 and 1
+    slope = (p2[1]-p1[1])/(p2[0]-p1[0])
     
     return p1[1]+slope*(x - p1[0])
+print(linInterp(2, [3,4], [5,6]))
 ```
 
 The problem with this interpolation function was that the indices indicated were out of range. By changing the indices to 1 and 0 the indicies are now in range and can be used in the function.
@@ -358,33 +340,26 @@ print('years=',year)
 print('population =', pop)
 ```
 
-#3a) Using the textbook/notebooks provided, I have formulated the analytical and numerical solutions of the growth rate and then plotted them together.
-
 ```{code-cell} ipython3
 print('average population changes 1900-1950, 1950-2000, 2000-2020')
 print((pop[1:] - pop[0:-1])/(year[1:] - year[0:-1]))
 print('average growth of 1900 - 2020')
 print(np.mean((pop[1:] - pop[0:-1])/(year[1:] - year[0:-1])))
 
-#3a).Comparison of the Analytical Solution and the Euler Integration Numerical Solution
-t = np.linspace(1900, 2020, 20) #array from 1900 to 2020 with time step 20
-k_g = 0.013 #growth rate
-#print(pop[0])
-def analytical_solution(t): #function to solve for analytical solution
-    '''mathetical calcultion of the population rate'''
-    return pop[0] * np.exp(k_g * (t - 1900)) #calculation of rate is the intial value times growth and change in time
-    
-numerical_solution = np.zeros(len(t)) #array of zeros
-numerical_solution[0] = pop[0] #first element 
-for i in range(0, len(t)-1): 
-    numerical_solution[i+1]= numerical_solution[i]+ k_g*numerical_solution[i]*(t[2]-t[1]) #numerical calcualtion of growth rate by multiplying by growth rate and change in time which is equaivalent to (t - 1900)
-plt.title('Analytical vs. Numerical')
-plt.plot(t, analytical_solution(t), '-', label='analytical')
-plt.plot(t, numerical_solution, 'o-',label='numerical')
-plt.legend()
+#3a).Comparison of the Analytical Solution and the Euler Integration
+time = np.linspace(1900, 2020, 20)
+k_g = 0.013
+analytical_solution =lambda year: pop[0] * np.exp(k_g * (year - 1900))
+euler_integration=np.zeros(len(time))
+euler_integration[0]=pop[0]
+for i in range(0, len(time)-1):
+    euler_integration[i+1]=euler_integration[i]+ k_g*euler_integration[i]*(time[1]-time[0])
+
+plt.plot(time, analytical_solution(time), color = 'red', label='analytical_solution');
+plt.plot(time, euler_integration, color = 'black',label='euler_intergration');
 ```
 
-#3b). Decreasing the time steps will not allow for the solution to completeley converge to the actual world population because the growth rate of 0.013 is already very small. If we were to decrease the time step, then we would barely see a change in the growth. The population itself increases dramatically over many years so it would be hard to see for a smaller amount of time and the data is best shown over a larger time period.
+#3b). Decreasing the time steps will not allow for the solution to completeley converge to the actual world population because the growth rate of 0.013 is already very small. If we were to decrease the time step, then we would barely see a change in the growth. The population itself increases dramatically over many years so it would be hard to see for a smaller amount of time.
 
 +++
 
@@ -421,55 +396,50 @@ def exptaylor(x,n):
         
 ```
 
-Below I have determing the approxiamtion of the series and the actual calculation:
-
 ```{code-cell} ipython3
 #d2a) Relative Error Between Approximation and Calculation
-approximation = exptaylor(1,2) #appoximation of the value
-calculation = np.exp(1) #actual calculation of the value
+approximation = exptaylor(1,2)
+calculation = np.exp(1)
 
 print(approximation)
 print(calculation)
 
-relative_error = ((approximation - calculation)/calculation) #relative order calculation
-relative_error = np.abs(relative_error * 100) #absolute value of relative order and turn into percentage 
+relative_error = ((approximation - calculation)/calculation)
+relative_error = np.abs(relative_error * 100)
 print(relative_error)
 ```
-
-From these calculations, the approximation of the series is 2.5 and the actual calculation of the series is 2.7. The relative error is determined by doing the approximated value minus the actual value divided by the actual value. Based on this the relative error between the two calculations is 8.03%.
 
 ```{code-cell} ipython3
 #d2b) Time the Solution for Second-Order Taylor Series
 %time
-series1 = exptaylor(1, 2) #second-order taylor series
-series2 = exptaylor(1, 10) #tenth-order taylor series
+series1 = exptaylor(1, 2)
+series2 = exptaylor(1, 10)
 #For 100,000
-series3 = (series2 - series1)/(10 - 2) #slope approximation
-hundreth_series_approx = series3 * 100000 #100000 approximation
+series3 = (series2 - series1)/(10 - 2)
+hundreth_series_approx = series3 * 100000
 print(series1)
 print(series2)
 print(hundreth_series_approx)
 ```
 
-The time of the second-order Taylor Series is 2.5µs and the time of the tenth-order Taylor series is 2.72 µs. The time of the 100000th-order taylor series was approximated by takingt the slope of the tenth-order and second-order tayor series. Based on this slope approximation, the time of the 100000th order Taylor Series would be about 2728.5 µs.
-
 ```{code-cell} ipython3
 #d2c) 
-n = np.arange(1, 20, 1) #create an array with values from 1 to 20 with timesteo of 1 
-N = len(n) #length of array
-relative_error = np.zeros(N, dtype = np.float32) #array of zeros
+sample = np.arange(1, 20, 1)
+length = len(sample)
 
-for i in range(0,N):
-    t = exptaylor(1, n[i]) #numerical and analytical solutions 
-    relative_error[i] = np.abs((exptaylor(1, i) - np.exp(1))/np.exp(1)) #calculation of relative error
+list1 = []
+for i in range(length):
+    data_fromsample = exptaylor(1, sample[i])
+    list1.append(data_fromsample)
+array_approx = np.array(list1)
+
+list2 = []
+for i in range(length):
+    list2.append(np.exp(1))
+
+array_actual = np.array(list2)
+    
+
+plt.plot(sample, array_approx, color = 'red', label='analytical_solution')
+plt.plot(sample, array_actual, color = 'black',label='actual_solution')
 ```
-
-```{code-cell} ipython3
-plt.loglog(n, relative_error,'o') #using loglog to plot error
-plt.xlabel('Number of Timesteps N')
-plt.ylabel('Relative Error')
-plt.title('Relative Error')
-plt.show()
-```
-
-To make this relative error plot, I did the comparison methods used in the "Truncation and roundoff error accumulation in log-log plot" from the notebook provided. The plot above is what the relative error looks like.
