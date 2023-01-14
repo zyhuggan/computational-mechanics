@@ -5,9 +5,9 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.10.3
+    jupytext_version: 1.11.4
 kernelspec:
-  display_name: Python 3
+  display_name: Python 3 (ipykernel)
   language: python
   name: python3
 ---
@@ -53,6 +53,8 @@ string_vals = np.array([[0.401e-3,7.28],
                         [4.466e-3,9.03],
                         [6.79e-3,7.71]])
 M = np.sum(string_vals[:,1]*9.81)*4e-3
+
+solve = np.linalg.solve(M, string_vals)
 ```
 
 2. Here, record the first three frequencies of the 6-string guitar. 
@@ -104,7 +106,6 @@ string_vals = np.array([[0.401e-3,7.28],
                         [4.466e-3,9.03],
                         [6.79e-3,7.71]])
 ```
-
 
 c. Create an audio signal that has the 18 frequencies (6 strings $\times$ 3 modes) in an array and display it using the `from IPython.display import Audio` library. 
 

@@ -5,9 +5,9 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.10.3
+    jupytext_version: 1.11.4
 kernelspec:
-  display_name: Python 3
+  display_name: Python 3 (ipykernel)
   language: python
   name: python3
 ---
@@ -117,7 +117,161 @@ d. Create a plot of the undeformed and deformed structure with the displacements
 ![Deformed structure with loads applied](../images/deformed_truss.png)
 
 ```{code-cell} ipython3
- 
+#2a
+def solveLU(L,U,b):
+    '''solveLU: solve for x when LUx = b
+    x = solveLU(L,U,b): solves for x given the lower and upper 
+    triangular matrix storage
+    uses forward substitution for |
+    1. Ly = b
+    then backward substitution for
+    2. Ux = y
+    
+    Arguments:
+    ----------
+    L = Lower triangular matrix
+    U = Upper triangular matrix
+    b = output vector
+    
+    returns:
+    ---------
+    x = solution of LUx=b '''
+    n=len(b)
+    x=np.zeros(n)
+    y=np.zeros(n)
+        
+    # forward substitution
+    for k in range(0,n):
+        y[k] = b[k] - L[k,0:k]@y[0:k]
+    # backward substitution
+    for k in range(n-1,-1,-1):
+        x[k] = (y[k] - U[k,k+1:n]@x[k+1:n])/U[k,k]
+    return x
+```
+
+```{code-cell} ipython3
+from scipy.linalg import lu
+P,L,U = lu(K[2:13,2:13]) #built in lu fuction
+print('P=\n',P)
+print('L=\n',L)
+print('U=\n',U)
+```
+
+```{code-cell} ipython3
+L@U
+```
+
+```{code-cell} ipython3
+#2b
+#steel
+F_steel = np.zeros(11) #array of zeros
+F_steel[5] = -300/200e3/0.1
+U_steel = solveLU(L, U, P.T@F_steel) #forwards
+U_steel
+```
+
+```{code-cell} ipython3
+U_total_steel = np.zeros(14)
+U_total_steel[2:13] = U_steel #backwards
+U_total_steel
+```
+
+```{code-cell} ipython3
+u_steel = U_total_steel
+F_steel = 200e3*0.1*K@U_total_steel
+```
+
+```{code-cell} ipython3
+#aluminum
+F_aluminum = np.zeros(11)
+F_aluminum[5] = -300/70e3/0.1
+U_aluminum = solveLU(L, U, P.T@F_aluminum) #forwards
+U_aluminum
+```
+
+```{code-cell} ipython3
+U_total_aluminum = np.zeros(14)
+U_total_aluminum[2:13] = U_aluminum #backwards
+U_total_aluminum
+```
+
+```{code-cell} ipython3
+u_aluminum = U_total_aluminum
+F_aluminum = 70e3*0.1*K@U_total_aluminum
+```
+
+```{code-cell} ipython3
+#2c
+#steel
+print('The reaction forces are:')
+for i, j in enumerate(200e3*0.1*K@U_total_steel):
+    print(i,j,'N')
+```
+
+```{code-cell} ipython3
+#aluminum
+print('The reaction forces are:')
+for i, j in enumerate(70e3*0.1*K@U_total_aluminum):
+    print(i,j,'N')
+```
+
+```{code-cell} ipython3
+#2d
+#Steel
+nodes = fea_arrays['nodes']
+elems = fea_arrays['elems']
+
+ix = 2*np.block([[np.arange(0,5)],[np.arange(1,6)],[np.arange(2,7)],[np.arange(0,5)]])
+iy = ix+1
+
+r = np.block([n[1:3] for n in nodes])
+
+l = 300 #length of beams (mm)
+
+def f_steel(s):
+    plt.plot(r[ix],r[iy],'-',color=(0,0,0,1))
+    plt.plot(r[ix]+u_steel[ix]*s,r[iy]+u_steel[iy]*s,'-',color=(1,0,0,1))
+    #plt.quiver(r[ix],r[iy],u[ix],u[iy],color=(0,0,1,1),label='displacements')
+    plt.quiver(r[ix],r[iy],F_steel[ix],F_steel[iy],color=(1,0,0,1),label='applied forces')
+    plt.quiver(r[ix],r[iy],u_steel[ix],u_steel[iy],color=(0,0,1,1),label='displacements')
+    plt.axis(l*np.array([-0.5,3.5,-0.5,2]))
+    plt.xlabel('x (mm)')
+    plt.ylabel('y (mm)')
+    plt.title('Deformation scale = {:.1f}x'.format(s))
+    plt.legend(bbox_to_anchor=(1,0.5))
+```
+
+```{code-cell} ipython3
+f_steel(5)
+```
+
+```{code-cell} ipython3
+#aluminum
+nodes = fea_arrays['nodes']
+elems = fea_arrays['elems']
+
+ix = 2*np.block([[np.arange(0,5)],[np.arange(1,6)],[np.arange(2,7)],[np.arange(0,5)]])
+iy = ix+1
+
+r = np.block([n[1:3] for n in nodes])
+
+l = 300 #length of beams (mm)
+
+def f_alum(s):
+    plt.plot(r[ix],r[iy],'-',color=(0,0,0,1))
+    plt.plot(r[ix]+u_aluminum[ix]*s,r[iy]+u_aluminum[iy]*s,'-',color=(1,0,0,1))
+    #plt.quiver(r[ix],r[iy],u[ix],u[iy],color=(0,0,1,1),label='displacements')
+    plt.quiver(r[ix],r[iy],F_aluminum[ix],F_aluminum[iy],color=(1,0,0,1),label='applied forces')
+    plt.quiver(r[ix],r[iy],u_aluminum[ix],u_aluminum[iy],color=(0,0,1,1),label='displacements')
+    plt.axis(l*np.array([-0.5,3.5,-0.5,2]))
+    plt.xlabel('x (mm)')
+    plt.ylabel('y (mm)')
+    plt.title('Deformation scale = {:.1f}x'.format(s))
+    plt.legend(bbox_to_anchor=(1,0.5))
+```
+
+```{code-cell} ipython3
+f_alum(5)
 ```
 
 ### 3. Determine cross-sectional area
@@ -130,9 +284,44 @@ c. What are the weights of the aluminum and steel trusses with the
 chosen cross-sectional areas?
 
 ```{code-cell} ipython3
-
+#3a
+area_alum = 23.7
+F_aluminum = np.zeros(11)
+F_aluminum[5] = -300/70e3/area_alum
+U_aluminum = solveLU(L, U, P.T@F_aluminum) #forwards
+U_aluminum
 ```
 
-## References
+```{code-cell} ipython3
+print('I would choose the cross sectional area for sluminum to be {} mm^2 since all the deformation values are still less than 0.2. I tried to make sure none of the values rounded up to 0.2 as well'.format(area_alum))
+```
 
-1. <https://en.wikipedia.org/wiki/Direct_stiffness_method>
+```{code-cell} ipython3
+#3b
+area_steel = 8.3
+F_steel = np.zeros(11)
+F_steel[5] = -300/200e3/area_steel
+U_steel = solveLU(L, U, P.T@F_steel) #forwards
+U_steel
+```
+
+```{code-cell} ipython3
+print('I would choose the cross sectional area for sluminum to be {} mm^2 since all the deformation values are still less than 0.2. I tried to make sure none of the values rounded up to 0.2 as well'.format(area_steel))
+```
+
+```{code-cell} ipython3
+#3c
+area_alum = area_alum * 11
+density_alum = 2710 #kg/m3
+mass_alum = area_alum * density_alum
+weight_alum = mass_alum * 9.81
+
+area_steel = area_steel * 11
+density_steel = 7700 #kg/m3
+mass_steel = area_steel * density_steel
+weight_steel = mass_steel * 9.81
+```
+
+```{code-cell} ipython3
+print('The weight of the aluminum truss is {:.2f}N and the weight of the steel truss is {:.2f}N.'.format(weight_alum, weight_steel))
+```

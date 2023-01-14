@@ -238,11 +238,11 @@ for i in range(N-1):
 from scipy.integrate import solve_ivp
 sol = solve_ivp(lambda t, y: rocket(y), [0, t[-1]], [0, 0, 0.25], t_eval=t)
 
-plt.plot(rk2_sol[:,2]/m0,rk2_sol[:,1],label='rk2',ls='-')
-plt.plot(sol.y[2], sol.y[1], 's', label = 'Integration Method')
+plt.plot(rk2_sol[:,2]/m0,rk2_sol[:,1],label='RK2')
+plt.plot(sol.y[2], sol.y[1], 's', label = 'Solve_IVP')
 plt.plot(m_T, v, label = 'Tsiolkovsky')
 #plt.axhline(y = 227, color ='b', linestyle ='-') #find height, its not needed i was just using it to show the height better
-plt.title('Convergence of Tsiolkovsky and Integration Method')
+plt.title('Convergence of Tsiolkovsky and Integration Methods')
 plt.ylabel('Velocity(m/s)')
 plt.xlabel('Mass(kg)')
 plt.legend()
@@ -273,7 +273,7 @@ If we were to change dm to 1 kilogram we would see the graphs converge like the 
 from scipy.integrate import solve_ivp
 sol = solve_ivp(lambda t, y: rocket(y, dmdt = dm), [0, t[-1]], [0, 0, 0.25], t_eval=t)
 
-plt.plot(sol.y[2], sol.y[1], 's', label = 'Integration Method')
+plt.plot(sol.y[2], sol.y[1], 's', label = 'Solve_IVP')
 plt.plot(m_T, v, label = 'Tsiolkovsky')
 plt.title('Convergence of Tsiolkovsky and Integration Method')
 plt.ylabel('Velocity(m/s)')

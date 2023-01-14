@@ -235,12 +235,28 @@ for i in range(N-1):
 ```
 
 ```{code-cell} ipython3
+plt.plot(rk2_sol[:,2]/m0,rk2_sol[:,1],ls='-')
+plt.title('RK2')
+```
+
+```{code-cell} ipython3
+plt.plot(sol.y[2]/m0, sol.y[1], 's')
+plt.title('Solve_IVP')
+```
+
+# New Revision 1: Divide all three mass values by m0
+
++++
+
+I have divded all three mass values by m0 and the new graph with analysis is seen below. I plotted each integration mothod above seperately as well to show that they are similar.
+
+```{code-cell} ipython3
 from scipy.integrate import solve_ivp
 sol = solve_ivp(lambda t, y: rocket(y), [0, t[-1]], [0, 0, 0.25], t_eval=t)
-
-plt.plot(rk2_sol[:,2]/m0,rk2_sol[:,1],label='rk2',ls='-')
-plt.plot(sol.y[2], sol.y[1], 's', label = 'Integration Method')
-plt.plot(m_T, v, label = 'Tsiolkovsky')
+#I have divded all three mass values by m0
+plt.plot(rk2_sol[:,2]/m0,rk2_sol[:,1],'s',label='RK2',ls='-')
+plt.plot(sol.y[2]/m0, sol.y[1], 's', label = 'Solve_IVP')
+plt.plot(m_T/m0, v, label = 'Tsiolkovsky')
 #plt.axhline(y = 227, color ='b', linestyle ='-') #find height, its not needed i was just using it to show the height better
 plt.title('Convergence of Tsiolkovsky and Integration Method')
 plt.ylabel('Velocity(m/s)')
@@ -248,7 +264,7 @@ plt.xlabel('Mass(kg)')
 plt.legend()
 ```
 
-When doing the same integration method for the rocket function, the plots do not converge like the simple rocket function did.
+When doing the same integration method for the rocket function, the rk2 method and solve_IVP method converge and overlap to each other but they do not converge to the Tsiolkovsky.
 
 +++
 
@@ -273,7 +289,7 @@ If we were to change dm to 1 kilogram we would see the graphs converge like the 
 from scipy.integrate import solve_ivp
 sol = solve_ivp(lambda t, y: rocket(y, dmdt = dm), [0, t[-1]], [0, 0, 0.25], t_eval=t)
 
-plt.plot(sol.y[2], sol.y[1], 's', label = 'Integration Method')
+plt.plot(sol.y[2], sol.y[1], 's', label = 'Solve_IVP')
 plt.plot(m_T, v, label = 'Tsiolkovsky')
 plt.title('Convergence of Tsiolkovsky and Integration Method')
 plt.ylabel('Velocity(m/s)')
@@ -302,6 +318,7 @@ b. Use the modified secant method to find the root of the function $f_{m}$.
 c. Plot your solution for the height as a function of time and indicate the detonation with a `*`-marker.
 
 ```{code-cell} ipython3
+
 def f_dm(dmdt, m0 = 0.25, c = 0.18e-3, u = 250):
     ''' define a function f_dm(dmdt) that returns 
     height_desired-height_predicted[-1]
@@ -428,17 +445,21 @@ print('The root of the function at 0.05 is', mod_secant(f_dm, 0.05, 0.1))
 print('The root of the function at 0.1 is', mod_secant(f_dm, 0.1, 0.1))
 ```
 
-# Revision2: Use the roots I found
+# Revision 2: Use the roots I found
 
 ```{code-cell} ipython3
 #3c) Plot height as a function of time and use a star to denote detonation at the correct height with a '*'
 for dm in [0.079, 0.088, 0.091, 0.108, 0.1375]:
     t = np.linspace(0, (m0-mf)/dm, 20)
     sol = solve_ivp(lambda t, y: rocket(y, dmdt = dm), [0, t[-1]], [0, 0, 0.25], t_eval=t)
-    plt.plot(sol.t, sol.y[0])
-    plt.plot(sol.t[-1], sol.y[0, -1], '*', markersize = 20, label = 'dm = {}'.format(dm)) #gives range of vales
+    plt.plot(sol.t, sol.y[0]) 
+    plt.plot(sol.t[-1], sol.y[0,-1], '*', markersize = 20, label = 'dm = {}'.format(dm)) #gives range of vales
 plt.legend()
 ```
+
+We should use 0.079 since we are solving for the mass change rate that results in detonation at a height of 300 meters. This would be the highest star marker on the graph.
+
++++
 
 ## References
 
