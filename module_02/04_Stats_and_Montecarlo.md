@@ -5,9 +5,9 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.10.3
+    jupytext_version: 1.11.4
 kernelspec:
-  display_name: Python 3
+  display_name: Python 3 (ipykernel)
   language: python
   name: python3
 ---
@@ -282,6 +282,7 @@ steps each.
 
 ```{code-cell} ipython3
 num_particles = 50
+N_steps = 10
 r_final = np.zeros((num_particles, 2))
 for i in range(0, num_particles):
     dx = rng.random(N_steps) - 0.5
