@@ -5,9 +5,9 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.10.3
+    jupytext_version: 1.11.4
 kernelspec:
-  display_name: Python 3
+  display_name: Python 3 (ipykernel)
   language: python
   name: python3
 ---
@@ -151,7 +151,7 @@ Notice that in the previous code cell, you created an empty list named `coords`,
 Click with your mouse on the endpoints of the white lines of the metered panel (click on the edge of the panel to get approximately equal $x$ coordinates), then print the contents of the `coords` list below.
 
 ```{code-cell} ipython3
-coords
+coords = [[7, 1004]]
 ```
 
 The $x$ coordinates are pretty close, but there is some variation due to
@@ -232,7 +232,7 @@ connectId = fig.canvas.mpl_connect('button_press_event', onclick)
 Click on the locations of the _ghost_ ball locations in the image above to populate `coords` with x-y-coordinates for the ball's location.
 
 ```{code-cell} ipython3
-coords # view the captured ball positions
+coords= [[103, 123, 128]]
 ```
 
 Scale the vertical displacements of the falling ball as explained above (to get distance in meters), then use the known time between flashes of the strobe light, $1/16.8\rm{s}$, to compute estimates of the velocity and acceleration of the ball at every captured instant, using:
@@ -379,7 +379,7 @@ widgets.interact(catchclick, frame=selector);
 ```
 
 ```{code-cell} ipython3
-coords # view the pixel coordinates of the projectile
+coords = [143, 133,123] # view the pixel coordinates of the projectile
 ```
 
 Now, convert the positions in pixels to meters, using your scaling for
@@ -533,3 +533,7 @@ plt.plot(ay);
 2. The Classic Bullet Projectile Motion Experiment with X & Y Axis Scales (2004), video by [Flipping Physics](http://www.flippingphysics.com/bullet-with-scales.html), Jon Thomas-Palmer. Used with permission.
 
 3. _Elementary Mechanics Using Python_ (2015), Anders Malthe-Sorenssen, Undergraduate Lecture Notes in Physics, Springer. Data at http://folk.uio.no/malthe/mechbook/
+
+```{code-cell} ipython3
+
+```
