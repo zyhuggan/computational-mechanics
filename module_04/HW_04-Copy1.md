@@ -16,7 +16,6 @@ kernelspec:
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-import random
 ```
 
 # Homework
@@ -67,20 +66,15 @@ Try to use `np.linalg.solve` to find the piston x-positions. Do you get
 any warnings or errors?
 
 ```{code-cell} ipython3
-#1.1
-k1 = 100
-k2 = 300
-k3 = 150 
-k4 = 350
-F1 = 10
-F2 = 20
-A=np.array([[k1,-k1,0,0,0],
-            [-k1,(k1+k2),-k2, 0, 0],
-            [0,-k2,(k2+k3),-k3,0],
-            [0,0,-k3,(k3+k4),-k4],
-            [0,0,0,-k4,k4]])
-b=np.array([F1,0,0,0,-F2])
+!head ../images/series-springs_01-02.png
+```
 
+```{code-cell} ipython3
+#1.1
+k1 = k2 = k3 = k4 = 1
+F = 1
+A=np.array([[k1,-k1,0,0,0], [-k1,(k1+k2),-k2, 0, 0],[0,-k2,(k2+k3),-k3,0],[0,0,-k3,(k3+k4),-k4],[0,0,0,-k4,k4]])
+b=np.array([F,0,0,0,-F])
 x = np.linalg.solve(A,b)
 ```
 
@@ -124,20 +118,16 @@ any warnings or errors? Why does this solution work better [hint: check
 condition
 numbers](./01_Linear-Algebra.md#Singular-and-ill-conditioned-matrices)
 
-+++
-
-# Revision 1: Fix Units
-
 ```{code-cell} ipython3
 import numpy as np
 A=np.array([[k1,-k1,0,0],
             [-k1,(k1+k2),-k2, 0],
             [0,-k2,(k2+k3),-k3],
             [0,0,-k3,(k3+k4)]])
-b=np.array([F1,0,0,0])
+b=np.array([F,0,0,0])
 
 x = np.linalg.solve(A,b)
-print('x1 = {:.2f} mm,\nx2 = {:.2f} mm,\nx3 = {:.2f} mm'.format(*x))
+print('x1 = {:.2f} mg/m^3,\nx2 = {:.2f} mg/m^3,\nx3 = {:.2f} mg/mm^3'.format(*x))
 ```
 
 This solution is better because in case one there was an infinite number of values for x and y. In case 2 we added a small number to make piston 5 zero, eliminating the fifth equation. This made it so the values of x and y can be solved for and there is now only one possibility of what they can be.
@@ -178,32 +168,32 @@ d. What are the warmest and coldest rooms? What are their temperatures?
 
 ```{code-cell} ipython3
 #1.2a
-m1 = m4 = 0.1 #assign to correct values
+m1 = m4 = 0.1
 m2 = m3 = 0.12
 m5 = m6 = 0.02
 C_p = 1000
 Q_in = 300
 T_in = 12
-A=np.array([[-m2*C_p,m6*C_p, 0], #make matrix
+A=np.array([[-m2*C_p,m6*C_p, 0],
             [m2*C_p,(-m3*C_p) + (-m6*C_p), m5*C_p],
             [0,m3*C_p,(-m5*C_p)+(-m4*C_p)]])
 ```
 
 ```{code-cell} ipython3
 #1.2b
-b = ([(-m1*C_p*T_in) - Q_in,-Q_in,-Q_in]) #making b matrix from values
+b = ([(-m1*C_p*T_in) - Q_in,-Q_in,-Q_in])
 ```
 
 ```{code-cell} ipython3
 #1.2c
-x = np.linalg.solve(A,b) #solving the two matricies
+x = np.linalg.solve(A,b)
 for i in range(0,3):
-    print('[{:5.1f} {:5.1f} {:5.1f}] {} [{:3.1f}] {} [{:5.1f}]'.format(*A[i],'*',x[i],'=',b[i])) #shows how everything is being multipled
+    print('[{:5.1f} {:5.1f} {:5.1f}] {} [{:3.1f}] {} [{:5.1f}]'.format(*A[i],'*',x[i],'=',b[i]))
 ```
 
 ```{code-cell} ipython3
 x = np.linalg.solve(A,b)
-print('The unknown x values are:\nx1 = {:.2f} mm\nx2 = {:.2f} mm\nx3 = {:.2f} mm'.format(*x))
+print('The unknown x values are:\nx1 = {:.2f} mg/m^3\nx2 = {:.2f} mg/m^3\nx3 = {:.2f} mg/mm^3'.format(*x))
 ```
 
 ```{code-cell} ipython3
@@ -246,21 +236,6 @@ for i in array_values:
     print("The accuracy of each matrix is {:e}.\n".format(np.linalg.cond(A)))
 ```
 
-# Revision 2: Expected Rounding Error
-
-```{code-cell} ipython3
-onebyone = 10**(0-16)
-fivebyfive = 10**(5-16)
-tenbyten = 10**(13-16)
-fifbyfif = 10**(17-16)
-twenbytwen = 10**(18-16)
-print("The expected rounding error in the 1 x 1 solution is {}".format(onebyone))
-print("The expected rounding error in the 5 x 5 solution is {}".format(fivebyfive))
-print("The expected rounding error in the 10 x 10 solution is {}".format(tenbyten))
-print("The expected rounding error in the 15 x 15 solution is {}".format(fifbyfif))
-print("The expected rounding error in the 20 x 20 solution is {}".format(twenbytwen))
-```
-
 ## Problems [Part 2](./02_Gauss_elimination.md)
 
 1. 4 masses are connected in series to 4 springs with K=100N/m. What are the final positions of the masses? 
@@ -298,7 +273,7 @@ m_{4}g \end{array} \right]$
 ```{code-cell} ipython3
 #2.1
 k = 100
-K = np.array([[2*k, -k, 0, 0], #built K matrix
+K = np.array([[2*k, -k, 0, 0], 
               [-k, 2*k,-k, 0], 
               [0, -k, 2*k, -k],
               [0,0,-k,k]])
@@ -306,10 +281,9 @@ print(K)
 ```
 
 ```{code-cell} ipython3
-b = np.array([1,2,3,4])*9.81 #masses times gravity 
-x = np.linalg.solve(K,b) #solving the two matrix
-print('The final positions of the masses in mm are')
-print(x)
+b = np.array([1,2,3,4])*9.81
+x = np.linalg.solve(K,b)
+print('The final positions of the masses are:\nx1 = {:.2f} mg/m^3\nx2 = {:.2f} mg/m^3\nx3 = {:.2f} mg/mm^3'.format(*x))
 ```
 
 ![Triangular truss](../images/truss.png)
@@ -343,10 +317,10 @@ c. Use the $\mathbf{LU}$ solution to solve for the tension in bar 1 $(P_1)$ ever
 𝛼 = 75*np.pi/180 #Radians
 𝛽 = 30*np.pi/180 #Radians 
 F = 100 #Newtons
-A = np.array([[1, np.cos(𝛼), 0], [0, 2*np.sin(𝛼), 0], [0, -np.sin(𝛼), 1]]) #make matrix
-b = np.array([0, F, 0]) #make array
+A = np.array([[1, np.cos(𝛼), 0], [0, 2*np.sin(𝛼), 0], [0, -np.sin(𝛼), 1]])
+b = np.array([0, F, 0])
 
-x, Aug = GaussNaive(A, b) #solve matricies
+x, Aug = GaussNaive(A, b)
 print('P1 is {:.2f} mg/m^3\nP2 is {:.2f} mg/m^3\nR2 is {:.2f} mg/mm^3'.format(*x))
 
 print('The resulting augmented matrix, 𝐀|𝐲 after Gauss elimination is\n', Aug)
@@ -394,7 +368,6 @@ print('U decomposition is:\n',U)
 ```
 
 ```{code-cell} ipython3
-#testing to see if they results equal each other
 print(A)
 print(L@U)
 ```
@@ -437,21 +410,19 @@ from numpy.random import default_rng
 rng = default_rng()
 ```
 
-# Revision 3: Fix how F is defined
-
 ```{code-cell} ipython3
-Fspace = np.zeros(1000) #making arrays of the corect number of zeros
+Fspace = np.zeros(1000)
 xspace = np.zeros(1000)
 for i in range(1000):
-    F = 1000*random.random()*np.array([0, 1, 0]) #random numbers of 3 to match matrix length 
-    y = np.linalg.solve(L, F) #solving matrices
+    F = 1000 * rng.random(3)
+    y = np.linalg.solve(L, F)
     x = np.linalg.solve(U, y)
     Fspace[i] = F[1]
-    xspace[i] = x[0] #0 to see the wide distribution
+    xspace[i] = x[0]
 ```
 
 ```{code-cell} ipython3
-plt.plot(xspace, Fspace, 's') #plotting P1 vs. F
+plt.plot(xspace, Fspace, 's')
 plt.xlabel('P1(N)')
 plt.ylabel('F(N)')
 plt.title('P1(N) vs F(N)')
@@ -492,7 +463,7 @@ c. Use the $\mathbf{PLU}$ solution to solve for the tension in bar 1 $(P_1)$ eve
 #2.3a)
 𝛼 = 75*np.pi/180 #Radians
 𝛽 = 30*np.pi/180 #Radians
-𝜃 = 45*np.pi/180 #Radians
+𝜃 = 45*np.pi/180
 F = 100 #Newtons
 A = np.array([[1, np.cos(𝛼), 0, 0, 1, 0], #pivoted by switching the first two rows
               [0, np.sin(𝛼), 0, 1, 0, 0], 
@@ -501,10 +472,10 @@ A = np.array([[1, np.cos(𝛼), 0, 0, 1, 0], #pivoted by switching the first two
               [-1, 0, np.cos(𝛼), 0, 0, 0], 
               [0, 0, np.sin(𝛼), 0, 0, 1]])
 b = np.array([0, 0, F*np.cos(𝜃), -F*np.sin(𝜃), 0, 0])
-x, A_y = GaussNaive(A, b)
+x, Aug = GaussNaive(A, b)
 print('P1 is {:.2f} mg/m^3\nP2 is {:.2f} mg/m^3\nR2 is {:.2f} mg/mm^3'.format(*x))
 
-print('The resulting augmented matrix, 𝐀|𝐲 after Gauss elimination is\n', A_y)
+print('The resulting augmented matrix, 𝐀|𝐲 after Gauss elimination is\n', Aug)
 ```
 
 ```{code-cell} ipython3
@@ -518,29 +489,24 @@ print('U=\n',U)
 ```
 
 ```{code-cell} ipython3
-#Check if the PLU equal A
 print(A)
 print(P@L@U)
 ```
 
 ```{code-cell} ipython3
-F = 1000*random.random()*np.array([0, 0, np.cos(𝜃), -np.sin(𝜃), 0 , 0])
-```
-
-```{code-cell} ipython3
 #2.3c)
-Fspace = np.zeros(1000) #making arrays of the corect number of zeros
+Fspace = np.zeros(1000)
 xspace = np.zeros(1000)
 for i in range(1000):
-    F = 1000*random.random()*np.array([0, 0, np.cos(𝜃), -np.sin(𝜃), 0 , 0])#random numbers of 6 to match matrix length 
-    y = np.linalg.solve(P,F)#solving matrices
-    x = np.linalg.solve(P,y)
+    F = 1000 * rng.random(6)
+    y = np.linalg.solve(L,F)
+    x = np.linalg.solve(U, y)
     Fspace[i] = F[1]
     xspace[i] = x[0]
 ```
 
 ```{code-cell} ipython3
-plt.plot(xspace, Fspace, 's') #plot of Pl vs F
+plt.plot(xspace, Fspace, 's')
 plt.xlabel('P1(N)')
 plt.ylabel('F(N)')
 plt.title('P1(N) vs F(N)')
@@ -572,11 +538,10 @@ d. Plot the best-fit function and the data from `../data/stress_relax.dat` _Use 
 ```{code-cell} ipython3
 #3.2a)
 !head ../data/stress_relax.dat
-data_file = np.loadtxt('../data/stress_relax.dat', skiprows = 1, delimiter = ',') #load in file
+data_file = np.loadtxt('../data/stress_relax.dat', skiprows = 1, delimiter = ',')
 ```
 
 ```{code-cell} ipython3
-#this is how the plot of the data looks
 stress = data_file[:,1]
 time = data_file[:,0]
 plt.plot(time, stress, 's')
@@ -584,7 +549,7 @@ plt.plot(time, stress, 's')
 
 ```{code-cell} ipython3
 #3.2b)
-Z = np.block([[np.exp(-time/1.78)], #Z-matrix for least-squares regression
+Z = np.block([[np.exp(-time/1.78)],
               [np.exp(-time/11)],
               [np.exp(-time/53)],
               [np.exp(-time/411)],
@@ -599,7 +564,7 @@ from sympy import solve
 
 ```{code-cell} ipython3
 #3.2c)
-constants = np.linalg.solve(Z.T@Z, Z.T@stress) #find the constants of the least-square regression
+constants = np.linalg.solve(Z.T@Z, Z.T@stress)
 print('The constants of the least-squares regression are:', constants)
 ```
 
@@ -609,7 +574,6 @@ lstsq(Z, stress) #least-squares solution
 
 ```{code-cell} ipython3
 #3.2d)
-#plot of data with best fit
 plt.plot(time, stress, 's', label = 'Data in File')
 plt.plot(time, Z@constants, label = 'Least-Squares Regression')
 plt.xlabel('Time(s)')
@@ -626,50 +590,45 @@ a. Use a piecewise least-squares regression to find a function for the energy co
 
 energy consumed = $f(t) = At+B+C(t-1970)H(t-1970)$
 
-b. What is your prediction for US energy use in 2025? How about European energy use in 2025?
+c. What is your prediction for US energy use in 2025? How about European energy use in 2025?
 
 ```{code-cell} ipython3
 #3.3
 !head '../data/primary-energy-consumption-by-region.csv' 
-data_file = pd.read_csv('../data/primary-energy-consumption-by-region.csv') #load in data file with pandas
+data_file = pd.read_csv('../data/primary-energy-consumption-by-region.csv')
 ```
 
 ```{code-cell} ipython3
 #3.3a)
-#United States Data
-US = data_file[data_file['Entity']=='United States'] 
+US = data_file[data_file['Entity']=='United States']
 US_year = US['Year'].values
 US_energy = US['Primary Energy Consumption (terawatt-hours)'].values
 ```
 
 ```{code-cell} ipython3
-Z = np.block([[US_year],[US_year**0], [(US_year>=1970)*(US_year-1970)]]).T #least-squares regression fucnction
+Z = np.block([[US_year],[US_year**0], [(US_year>=1970)*(US_year-1970)]]).T
 ```
 
 ```{code-cell} ipython3
-#Data and Best fit line
 plt.plot(US_year, US_energy, 's')
 constants = np.linalg.solve(Z.T@Z, Z.T@US_energy)
 plt.plot(US_year, Z@constants)
-plt.title('US Data w/ Best Fit')
 ```
 
 ```{code-cell} ipython3
-#Europe Data
 Europe = data_file[data_file['Entity']=='Europe']
 Europe_year = Europe['Year'].values
 Europe_energy = Europe['Primary Energy Consumption (terawatt-hours)'].values
 ```
 
 ```{code-cell} ipython3
-Z_Europe = np.block([[Europe_year],[Europe_year**0], [(Europe_year>=1970)*(Europe_year-1970)]]).T #least-squares regression fucnction
+Z_Europe = np.block([[Europe_year],[Europe_year**0], [(Europe_year>=1970)*(Europe_year-1970)]]).T
 ```
 
 ```{code-cell} ipython3
 plt.plot(Europe_year, Europe_energy, 's')
 constants_europe = np.linalg.solve(Z_Europe.T@Z, Z_Europe.T@Europe_energy)
 plt.plot(Europe_year, Z_Europe@constants_europe)
-plt.title('Europe Data w/ Best Fit')
 ```
 
 ```{code-cell} ipython3
@@ -677,24 +636,20 @@ plt.title('Europe Data w/ Best Fit')
 plt.plot(US_year, US_energy, 's')
 constants = np.linalg.solve(Z.T@Z, Z.T@US_energy)
 extension = np.arange(1960, 2030)
-Z = np.block([[extension],[extension**0], [(extension>=1970)*(extension-1970)]]).T
+Z_extension= np.block([[extension],[extension**0], [(extension>=1970)*(extension-1970)]]).T
 plt.axvline(x = 2025, color = 'b', label = 'axvline - full height')
-plt.plot(extension, Z@constants)
-plt.title('US Data w/ Best Fit Prediction')
+plt.plot(extension, Z_extension@constants)
 ```
 
 My prediciton for US energy use in 2025 is about 28000 TW.
 
 ```{code-cell} ipython3
+plt.plot(Europe_year, Europe_energy, 's')
+constants = np.linalg.solve(Z_Europe.T@Z, Z_Europe.T@US_energy)
 extension_europe = np.arange(1960, 2030)
 Z_extension_europe= np.block([[extension_europe],[extension_europe**0], [(extension_europe>=1970)*(extension_europe-1970)]]).T
-```
-
-```{code-cell} ipython3
-plt.plot(Europe_year, Europe_energy, 's')
 plt.axvline(x = 2025, color = 'b', label = 'axvline - full height')
-plt.plot(extension_europe, Z_extension_europe@constants_europe)
-plt.title('Europe Data w/ Best Fit Prediction')
+plt.plot(extension_europe, Z_extension_europe@constants)
 ```
 
 My prediciton for Europe energy use in 2025 is about 29000 TW.
